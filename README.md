@@ -1,5 +1,4 @@
 - **AI PREDICTIONS** 
 ![](prediction.png)
 
-- **TEAM RATING**
-![](team_rating.png)
+![](wk_chance_10.png)
