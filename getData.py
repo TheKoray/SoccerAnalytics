@@ -93,48 +93,7 @@ class getData:
             result = self.addWeek(df = result)
 
         return result
-    
-    """
-    def getNewData(self, played=False, weekColumn = False):
-
-        r = requests.get("https://fbref.com/en/comps/26/schedule/Super-Lig-Scores-and-Fixtures")
-        soup = bs(r.content, 'html.parser')
-        table = soup.find('table', class_ = 'stats_table') #fikstür, maç ve sonuçları bizim tablelarımız
-
-        result = pd.DataFrame()
-        day,date,time,home,score,away = [],[],[],[],[],[]
-        for row in table.tbody.find_all('tr'):
-
-            null = row.find_all("th", attrs= {'class':'right iz'}) #veriyi çektiğimiz tabloda ki boş satırları bulduk. Onları almıyoruz.
-            if not len(null) > 0:
-                columns = row.find_all('td')
-                day.append(columns[0].text)
-                date.append(columns[1].text)
-                time.append(columns[2].text)
-                home.append(columns[3].text)
-                score.append(columns[4].text)
-                away.append(columns[5].text)
-
-        result['Day'] = day
-        result['Date'] = date
-        #result['Time'] = time
-        result['Home'] = home
-        result['Score'] = score
-        result['Away'] = away
-
-        #result['Date'] = pd.to_datetime(result['Date'])
-        result.drop(result.loc[result['Date'].isnull()].index, axis=0, inplace=True) #date sütunlarında gelen boş satırları siliyoruz.
-        result.reset_index(drop=True, inplace=True)
-
-        if played:
-            result.drop([23,27,29], axis=0, inplace=True) #ertelenen maçları datadan çıkarttık. O maçlar oynanınca bu satırı sil!
-            result.reset_index(drop=True,inplace = True)
-            result = self.getPlayedMatches(df = result)
-
-        if weekColumn:
-            result = self.addWeek(df = result)
-
-        return result """
+  
     
     def mergeData(self):
         """
@@ -145,6 +104,9 @@ class getData:
     
     @property
     def getTeams(self):
+        """
+        get Team names
+        """
 
         df = self.getNewData(played=True)
 
