@@ -1,1 +1,1 @@
-![](puan_tablosu.png)
+
