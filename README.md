@@ -1,1 +1,1 @@
-![](puan_tablosu.png)
+![] (puan_tablosu.png)
