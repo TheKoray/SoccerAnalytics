@@ -89,7 +89,7 @@ class soccerMetric(eloRating):
         else:
             return (0,0)
         
-    def uptadeRating_(self,df):
+    def _uptadeRating(self,df):
 
         team_data = self.teamStrength(df = df)
         team_data = self.attackRank(df = team_data)
