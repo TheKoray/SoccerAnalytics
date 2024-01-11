@@ -94,7 +94,6 @@ class getData:
 
         return result
   
-    
     def mergeData(self):
         """
         - History Data ile 2023/2024 maç datasını birleştirir.
@@ -164,8 +163,7 @@ class getData:
                                                     .assign(L = pd.concat([data_home, data_away], ignore_index = True).groupby("Team")['Lost'].sum())\
                                                     .assign(AV=lambda x: np.subtract(x['AG'],x['YG']))\
                                                     .assign(MBP = lambda x: round(np.divide(x["Point"], x['OM']),2))\
-                                                    #.assign(Form = pd.concat([data_home, data_away], ignore_index = True).groupby('Team')['Form'].sum().apply(lambda x: x[::-1][:5]))\
-                                                    #.sort_values(by = 'Point', ascending = False)\
+                
         data_avg = data_avg.assign(Form = [form[:5] for idx in data_avg.index for team, form in self.formTeam(df = df).items() if idx == team])
         data_avg = data_avg.assign(Form = [''.join(data_avg.loc[idx,'Form']) for idx in data_avg.index])\
                     .reindex(['OM','W','D','L','AG','YG','AV','Point','WeeklyChange','Change','MBP','Form'], axis=1)\
@@ -173,8 +171,6 @@ class getData:
 
         data_avg['Change'] = data_avg['Change'].apply(lambda x: round(x,2))
         data_avg['WeeklyChange'] = data_avg['WeeklyChange'].apply(lambda x: round(x,2))
-
-        #data_avg['Form'] = ["".join(team_form[i]) for i in data_avg.index if i in team_form.keys()] #takımların formlarını team_form dictionarysinden alıp her takım için form durumlarını Form sütununa kaydettik
 
         return data_avg
     
