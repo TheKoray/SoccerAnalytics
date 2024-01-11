@@ -145,7 +145,6 @@ class getData:
         """
         - Puan Tablosunu veren fonksiyon
         """
-
         team_form = self.formTeam(df =df) # takımların form değerlerini alırız.
 
         data_home = df.rename(columns = {'Home':'Team','HomeScore':'AG','AwayScore':'YG','EloHomeChange':'Change','Elo_h_after':'Elo','HomePoint':'Point','HomeForm':'Form',
