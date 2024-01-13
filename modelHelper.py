@@ -10,13 +10,10 @@ import pickle
 gData = getData()
 soccer = soccerMetric()
 elo = eloRating()
-
 plot = getPlot()
 #to do : new_data yı oku.getplayedmatch fonksiyonu yada onu cıkar
 
 class modelHelper():
-
-    new_data = pd.read_csv("2023_2024_sezonu.csv").drop("Unnamed: 0", axis=1) # 2023-2024 sezon maçlarının olduğu csv 
 
     def teamPower(self, df,home_team,away_team):
 
@@ -179,19 +176,17 @@ class modelHelper():
 
         return result
 
-    def ScoreDifference(df):
+    def ScoreDifference(self, df):
 
         data_home = df.rename(columns = {'Home':'Team','HomeScore':'Score',"AwayScore":"ScoreCancel"})
         data_away = df.rename(columns = {'Away':'Team','AwayScore':'Score',"HomeScore":"ScoreCancel"})
 
         result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team").sum().loc[:,['Score','ScoreCancel']].sort_values(by = "Score", ascending=False)
-
         return result
     
     def predResult(self, home, away, model,team_data, play_df):
         
         team = pd.DataFrame()
-
         #team_rank = {team : cnt +1 for cnt, (team, rank) in enumerate(soccer.uptadeEloRating_().loc[:,'EloRating'].items())} #elo rating değerlerine göre sıralama
         team_rank = {team : cnt +1 for cnt, (team, rank) in enumerate(team_data.loc[:,"EloRating"].sort_values(ascending=False).items())}
 
@@ -231,9 +226,11 @@ class modelHelper():
 
     def probWeek(self, wk, team_data, play_df, model):
 
+        new_data = pd.read_csv("2023_2024_sezonu.csv").drop("Unnamed: 0", axis=1) # 2023-2024 sezon maçlarının olduğu csv 
+
         result, home,away, h_p, d_p, a_p = pd.DataFrame(), [],[],[],[],[]
 
-        for idx, col in self.new_data.loc[self.new_data['Hafta'].isin([wk])].iterrows():
+        for idx, col in new_data.loc[new_data['Hafta'].isin([wk])].iterrows():
 
             h, d, a = self.predResult(home = col['Home'], away = col['Away'], model = model, team_data=team_data, play_df=play_df)
             home.append(col['Home'])
@@ -250,10 +247,9 @@ class modelHelper():
 
         return result
 
-    def predictPipeline(self, wk : int):
+    def getTeamData(self):
 
-        model = pickle.load(open("tff_model", "rb"))
-        
+        model = pickle.load(open("tff_model", "rb")) #load ai model
         play_df = gData.getNewData(played = True).drop(['Score','Day'], axis=1)
 
         team_data = soccer.teamStrength(df = play_df) #takımların güçlerini alırız. Attack, defense.
@@ -268,14 +264,20 @@ class modelHelper():
         team_data = pd.merge(team_data, score_diff, left_index=True, right_index=True)
 
         team_data = team_data.assign(Av = lambda x: x["Score"] - x["ScoreCancel"])
-        
-        result = self.probWeek(wk = wk, team_data = team_data,play_df = play_df, model = model)
+
+        return team_data, play_df, model
+
+    def predictPipeline(self, wk : int, plotting = False):
+
+        team_data, play_df, model = self.getTeamData() #tahmin için gerekli data ve model
+
+        result = self.probWeek(wk = wk, team_data = team_data, play_df = play_df, model = model)
 
         result = result.assign(Home_Prob = round(result['Home_Prob'] * 100,2))\
                         .assign(Draw = round(result['Draw'] * 100, 2))\
                         .assign(Away_Prob = round(result['Away_Prob'] * 100,2))
-
-        result_df = plot.imgAdd(result_df = result)
-        plot.weeklyProbPlot(df = result_df)
+        if plotting:
+            result_df = plot.imgAdd(result_df = result)
+            plot.weeklyProbPlot(df = result_df)
 
         return result
