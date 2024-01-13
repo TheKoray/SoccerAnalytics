@@ -286,7 +286,7 @@ class modelHelper():
     def main(self, user):
 
         while user != "q":
-
+            
             if user == "Pred":
 
                 predWeek = input("Predict For Week = ")
