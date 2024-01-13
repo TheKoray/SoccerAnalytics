@@ -283,38 +283,29 @@ class modelHelper():
 
         return result
     
-    def main(self):
+    def main(self, user):
 
-        docDict = {'For Predictions':'Pred','For Weekly Match': 'Weekly','For Team Rating' : 'Rating','For Team Stats': 'Stats'}
-        what = input(f"Choose {docDict} = ") 
-        
-        while what != "q":
+        while user != "q":
 
-            if what == "Pred":
+            if user == "Pred":
 
                 predWeek = input("Predict For Week = ")
-                df = self.predictPipeline(wk = int(predWeek))
-                print(df)
-                continue 
-
-            elif what == 'Rating':
-
-                print(soccer.uptadeEloRating_().reset_index().set_axis(np.arange(1,21), axis=0))
-                continue
-
-            elif what == 'Weekly':
+                return self.predictPipeline(wk = int(predWeek))
+                
+            elif user == 'Rating':
+                return soccer.uptadeEloRating_().reset_index().set_axis(np.arange(1,21), axis=0)
+                
+            elif user == 'Weekly':
 
                 week = input("Week = ")
                 new_data = pd.read_csv("2023_2024_sezonu.csv").drop("Unnamed: 0", axis=1)
-                new_data = new_data.loc[new_data["Hafta"].isin([int(week)])].set_index('Tarih')
-                print(new_data)
-                break
 
-            elif what == 'Stats':
+                return new_data.loc[new_data["Hafta"].isin([int(week)])].set_index('Tarih')\
+                        .drop(['HomeScore','AwayScore'], axis=1)
+                
+            elif user == 'Stats':
+                return helpfunc.getTable()
 
-                print(helpfunc.getTable())
-                break
-
-            elif what == "q":
+            elif user == "q":
                 break
 
