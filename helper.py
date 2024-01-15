@@ -6,8 +6,6 @@ import os
 from datetime import datetime
 plot = getPlot()
 
-TODO = 'getInfo fonksiyoununu yaz. Görsellerin klasör ve ad bilgilerini verir.'
-
 class helper(soccerMetric):
 
     @staticmethod
@@ -16,10 +14,14 @@ class helper(soccerMetric):
         date = datetime.now()
         return "-".join(str(dt) for dt in [date.day,date.month,date.year])
     
-    def _getInfo(self):
+    def _getInfo(self, fileName):
 
-        pass
+        return f"WeeklyChange görseli weeklyChange klasörü içerisinde wkChange{fileName} adı ile kaydedildi."
+    
+    def _saveFig(self, figure,figName):
 
+        figure.write_image(fr"C:\Users\UserName\Masaüstü\SuperLeague\Output\weeklyChange\wkChange{figName}.png")
+        
     def getTable(self):
 
         play_df = self.getNewData(played = True) #bu sezon sadece oynanan maçları alıyoruz.
@@ -57,10 +59,12 @@ class helper(soccerMetric):
             title_font_color= "white", #title rengi
             legend_title_font_color="white" #label rengi (blue, red üzerinde ki color'ın rengi)
         )
-        current_date = self.getCurrentDate()
-        fig.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\weeklyChange\wkChange{current_date}.png")
-
-        print(f"WeeklyChange görseli weeklyChange klasörü içerisinde wkChange{current_date} adı ile kaydedildi.")
+        current_date = self.getCurrentDate() #current date al
+        self._saveFig(figure = fig, figName = current_date) #figure save
+        self._getInfo(fileName = current_date) #path ve figure bilgisi
+        
+        #fig.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\weeklyChange\wkChange{current_date}.png")
+        #print(f"WeeklyChange görseli weeklyChange klasörü içerisinde wkChange{current_date} adı ile kaydedildi.")
 
     
     def mainRatingImg(self):
