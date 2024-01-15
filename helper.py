@@ -6,6 +6,8 @@ import os
 from datetime import datetime
 plot = getPlot()
 
+TODO = '_getInfo path update, _saveFig function update for savefig function'
+
 class helper(soccerMetric):
 
     @staticmethod
@@ -24,9 +26,12 @@ class helper(soccerMetric):
                        'rating': 'TeamRating',
                        'pred' : 'Pred'
                        }
-        
-        folderName = "".join([v for k,v in folderCache.items() if figName == k])
-        figure.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\{folderName}\wkChange{figName}.png")
+        folderName = "".join([v for k,v in folderCache.items() if figName == k]) #path'deki ilgili figure göre klasör ismini aldık.
+
+        if figName == 'wk':
+            figure.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\{folderName}\wkChange{figName}.png")
+        else:
+            figure.savefig(f"{figName}")
         
     def getTable(self):
 
@@ -68,10 +73,6 @@ class helper(soccerMetric):
         current_date = self.getCurrentDate() #current date al
         self._saveFig(figure = fig, figName = current_date) #figure save
         self._getInfo(fileName = current_date) #path ve figure bilgisi
-        
-        #fig.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\weeklyChange\wkChange{current_date}.png")
-        #print(f"WeeklyChange görseli weeklyChange klasörü içerisinde wkChange{current_date} adı ile kaydedildi.")
-
     
     def mainRatingImg(self):
 
@@ -85,8 +86,7 @@ class helper(soccerMetric):
         img = plot.plotTeamsRating(df = team_rating)
         
         current_date = self.getCurrentDate()
-        self._saveFig(figure=img, figName = current_date)
-        #img.savefig(f"{imgName}.png")
-        #info = f"{imgName}.png, dosyası {os.getcwd()} klasörüne kaydedildi"
-        #print(info)
+        self._saveFig(figure = img, figName = current_date)
+        self._getInfo(fileName = current_date)
+
 
