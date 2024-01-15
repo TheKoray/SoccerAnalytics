@@ -20,7 +20,13 @@ class helper(soccerMetric):
     
     def _saveFig(self, figure,figName):
 
-        figure.write_image(fr"C:\Users\UserName\Masaüstü\SuperLeague\Output\weeklyChange\wkChange{figName}.png")
+        folderCache = {'wk' : 'wkChange',
+                       'rating': 'TeamRating',
+                       'pred' : 'Pred'
+                       }
+        
+        folderName = "".join([v for k,v in folderCache.items() if figName == k])
+        figure.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\{folderName}\wkChange{figName}.png")
         
     def getTable(self):
 
@@ -77,7 +83,9 @@ class helper(soccerMetric):
         team_rating = self.uptadeRating_(df = data) #takımların spi rating, attack ve defense değerlerinin bize verir.
         team_rating = plot.teamRatingImg(df = team_rating)
         img = plot.plotTeamsRating(df = team_rating)
-
+        
+        current_date = self.getCurrentDate()
+        self._saveFig(figure=img, figName = current_date)
         #img.savefig(f"{imgName}.png")
         #info = f"{imgName}.png, dosyası {os.getcwd()} klasörüne kaydedildi"
         #print(info)
