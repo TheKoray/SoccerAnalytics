@@ -18,7 +18,17 @@ class helper(soccerMetric):
     
     def _getInfo(self, fileName):
 
-        return f"WeeklyChange görseli weeklyChange klasörü içerisinde wkChange{fileName} adı ile kaydedildi."
+        print(f"{fileName} görseli weeklyChange klasörü içerisinde wkChange{fileName} adı ile kaydedildi.")
+
+    def _getPlotInfo(self, figName):
+
+
+        
+        folderCache = {'wk' : 'wkChange',
+                       'rating': 'TeamRating',
+                       'pred' : 'Pred'
+                       }
+        folderName = "".join([v for k,v in folderCache.items() if figName == k]) #path'deki ilgili figure göre klasör ismini aldık.
     
     def _saveFig(self, figure,figName):
 
@@ -31,6 +41,7 @@ class helper(soccerMetric):
         if figName == 'wk':
             figure.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\{folderName}\wkChange{figName}.png")
         else:
+            os.chdir(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\{folderName}")
             figure.savefig(f"{figName}")
         
     def getTable(self):
@@ -74,7 +85,7 @@ class helper(soccerMetric):
         self._saveFig(figure = fig, figName = current_date) #figure save
         self._getInfo(fileName = current_date) #path ve figure bilgisi
     
-    def mainRatingImg(self):
+    def TeamRating(self):
 
         data = self.mergeData() #history data ile bu sezon oynanan maçlardaki dataları birleştirir
         team_data = self.teamStrength(df = data) #takımların güçlerini alırız. Attack, defense.
