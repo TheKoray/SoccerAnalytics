@@ -10,39 +10,44 @@ TODO = '_getInfo path update, _saveFig function update for savefig function'
 
 class helper(soccerMetric):
 
+    path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
+
     @staticmethod
     def getCurrentDate():
 
         date = datetime.now()
         return "-".join(str(dt) for dt in [date.day,date.month,date.year])
-    
-    def _getInfo(self, fileName):
 
-        print(f"{fileName} görseli weeklyChange klasörü içerisinde wkChange{fileName} adı ile kaydedildi.")
+    def _getPlotInfo(self, figName): #grafiğe göre klasör ismi döndürür.
 
-    def _getPlotInfo(self, figName):
+        folderCache = {'WeeklyChange' : 'weeklyChange',
+                        'TeamRating': 'TeamRating',
+                        'pred' : 'Pred'
+                        }
+        folderName = "".join([v for k,v in folderCache.items() if figName == k]) #path'deki ilgili figure göre klasör ismini aldık.
 
+        return folderName
 
+    def _saveFig(self, figName, figure): # plotu kaydeder
         
-        folderCache = {'wk' : 'wkChange',
-                       'rating': 'TeamRating',
-                       'pred' : 'Pred'
-                       }
-        folderName = "".join([v for k,v in folderCache.items() if figName == k]) #path'deki ilgili figure göre klasör ismini aldık.
+        folderName = self._getPlotInfo(figName=figName)
+        figDate = self.getCurrentDate()
+
+        if figName == 'WeeklyChange':
+
+            figure.write_image(fr"{self.path}\{folderName}\{folderName}_{figDate}.png")
+
+        elif figName == "TeamRating":
+
+            os.chdir(fr"{self.path}\{folderName}")
+            figure.savefig(f"{folderName}_{figDate}")
     
-    def _saveFig(self, figure,figName):
+    def _getInfo(self,figName):
 
-        folderCache = {'wk' : 'wkChange',
-                       'rating': 'TeamRating',
-                       'pred' : 'Pred'
-                       }
-        folderName = "".join([v for k,v in folderCache.items() if figName == k]) #path'deki ilgili figure göre klasör ismini aldık.
+        figDate = self.getCurrentDate()
+        folderName = self._getPlotInfo(figName=figName)
 
-        if figName == 'wk':
-            figure.write_image(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\{folderName}\wkChange{figName}.png")
-        else:
-            os.chdir(fr"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output\{folderName}")
-            figure.savefig(f"{figName}")
+        print(f"{self.path}\{folderName} klasörüne {folderName}_{figDate} adında kaydedildi")
         
     def getTable(self):
 
@@ -81,9 +86,9 @@ class helper(soccerMetric):
             title_font_color= "white", #title rengi
             legend_title_font_color="white" #label rengi (blue, red üzerinde ki color'ın rengi)
         )
-        current_date = self.getCurrentDate() #current date al
-        self._saveFig(figure = fig, figName = current_date) #figure save
-        self._getInfo(fileName = current_date) #path ve figure bilgisi
+
+        self._saveFig(figure = fig, figName = "WeeklyChange") #figure save
+        self._getInfo(figName = "WeeklyChange") #path ve figure bilgisi
     
     def TeamRating(self):
 
@@ -96,8 +101,7 @@ class helper(soccerMetric):
         team_rating = plot.teamRatingImg(df = team_rating)
         img = plot.plotTeamsRating(df = team_rating)
         
-        current_date = self.getCurrentDate()
-        self._saveFig(figure = img, figName = current_date)
-        self._getInfo(fileName = current_date)
+        self._saveFig(figure = img, figName = "TeamRating")
+        self._getInfo(figName = "TeamRating")
 
 
