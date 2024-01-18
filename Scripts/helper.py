@@ -6,11 +6,9 @@ import os
 from datetime import datetime
 plot = getPlot()
 
-TODO = '_getInfo path update, _saveFig function update for savefig function'
-
 class helper(soccerMetric):
 
-    path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
+    path = r"yourPath"
 
     @staticmethod
     def getCurrentDate():
