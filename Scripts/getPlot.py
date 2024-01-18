@@ -5,6 +5,7 @@ from plottable import ColumnDefinition, Table
 from plottable.plots import circled_image # image
 from matplotlib.colors import LinearSegmentedColormap
 from plottable.cmap import normed_cmap
+import plotly.express as px
 from plottable.formatters import decimal_to_percent
 from plottable.plots import circled_image # image
 import matplotlib
@@ -27,7 +28,6 @@ class getPlot:
                     result_df.loc[idx,'AwayImg'] = j['Img']
         return result_df.reindex(['HomeImg','Home','Home_Prob','Draw','Away_Prob','Away','AwayImg'],
                                  axis=1)
-    
     
     def teamRatingImg(self,df):
         
@@ -280,3 +280,46 @@ class getPlot:
         plt.show()
         fig.savefig("puan_tablosu")
         return fig 
+    
+    def WeeklyChange(self):
+
+        play_df = self.getNewData(played = True) #bu sezon sadece oynanan maçları alıyoruz.
+        elo_df = self.updateElo(df = play_df) 
+        data_avg = self.teamTable(df = elo_df)
+
+        fig = px.bar(data_avg, y = 'WeeklyChange', x = data_avg.index, 
+             color = "WeeklyChange",
+             color_continuous_scale = "Reds_r", #cmap parametresi. weeklyChange değişkeninde ki değerleri eksiden artıya cmap ayarladık.
+             text= [str(data_avg["WeeklyChange"]) for i in data_avg['WeeklyChange']], #bar üzerinde ki değerleri yazdık
+             labels = {"color" : "Change >0 or <0"})
+
+        fig.update_layout(
+            title_text="Weekly Change of Performance Rating For Teams",
+            title_x=0.5, #title position
+            height=400,
+            width=1000,
+            xaxis={'categoryorder': 'total descending'},
+            template="plotly_dark"
+        )
+
+        fig.update_layout(
+            font_family="Courier New",
+            font_color= "white", #grafikte yazıların rengi
+            title_font_family="Times New Roman",
+            title_font_color= "white", #title rengi
+            legend_title_font_color="white" #label rengi (blue, red üzerinde ki color'ın rengi)
+        )
+    
+    def TeamRating(self):
+
+        data = self.mergeData() #history data ile bu sezon oynanan maçlardaki dataları birleştirir
+        team_data = self.teamStrength(df = data) #takımların güçlerini alırız. Attack, defense.
+        team_data = self.attackRank(df = team_data) # takımların attack değerine göre rankını alırız.
+        team_data = self.defenseRank(df = team_data) #takmların defense değerine göre rankını alırız.
+        team_data = self.eloRank(df = team_data) #takımların elo rating değerlerini ekleriz
+        team_rating = self.uptadeRating_(df = data) #takımların spi rating, attack ve defense değerlerinin bize verir.
+        team_rating = self.teamRatingImg(df = team_rating)
+        img = self.plotTeamsRating(df = team_rating)
+        
+        self._saveFig(figure = img, figName = "TeamRating")
+        self._getInfo(figName = "TeamRating")
