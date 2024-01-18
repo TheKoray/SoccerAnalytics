@@ -5,8 +5,10 @@ import statsmodels.formula.api as smf
 from scipy.stats import poisson,skellam
 import seaborn as sns 
 import matplotlib.pyplot as plt
+from helper import *
 
 gData = getData()
+h = helper()
 
 class poissonmodel():
 
@@ -48,7 +50,6 @@ class poissonmodel():
 
     def poissonPredict(self):
 
-        max_goals=5
         score_matrix = self.simulateMatch()
 
         #Home, draw, away probabilities
@@ -75,4 +76,5 @@ class poissonmodel():
         ax.xaxis.tick_top()
         ax.yaxis.get_inverted()
         plt.title(f"{self.home_team} - {self.away_team} Outcome Probability")
+        return fig 
 
