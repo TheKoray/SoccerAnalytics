@@ -47,8 +47,7 @@ class poissonmodel():
     
 
     def poissonPredict(self):
-
-        max_goals=5
+        
         score_matrix = self.simulateMatch()
 
         #Home, draw, away probabilities
@@ -59,7 +58,7 @@ class poissonmodel():
         return homewin, draw, awaywin
 
     def goalsProbPlot(self):
-
+        
         score_df = self.simulateMatch()
         fig=plt.figure(figsize=(10,5))
         ax=fig.add_subplot(1,1,1)
