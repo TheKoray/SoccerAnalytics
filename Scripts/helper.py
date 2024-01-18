@@ -1,14 +1,17 @@
 from soccerMetric import * 
 from getPlot import *
+import plotly
 import plotly.express as px
 import kaleido 
 import os
 from datetime import datetime
 plot = getPlot()
 
+TODO = "according to plotting type update savefig function"
+
 class helper(soccerMetric):
 
-    path = r"yourPath"
+    path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
 
     @staticmethod
     def getCurrentDate():
@@ -30,6 +33,8 @@ class helper(soccerMetric):
         
         folderName = self._getPlotInfo(figName=figName)
         figDate = self.getCurrentDate()
+
+        assert isinstance(figure,(plotly.graph_objs._figure.Figure, matplotlib.figure.Figure)), "figure parameter not figure type"
 
         if figName == 'WeeklyChange':
 
