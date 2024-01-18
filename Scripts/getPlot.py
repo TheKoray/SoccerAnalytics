@@ -321,5 +321,3 @@ class getPlot:
         team_rating = self.teamRatingImg(df = team_rating)
         img = self.plotTeamsRating(df = team_rating)
         
-        self._saveFig(figure = img, figName = "TeamRating")
-        self._getInfo(figName = "TeamRating")
