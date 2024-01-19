@@ -34,7 +34,8 @@ class helper(soccerMetric):
         folderName = self._getPlotInfo(figName=figName)
         figDate = self.getCurrentDate()
 
-        assert isinstance(figure,(plotly.graph_objs._figure.Figure, matplotlib.figure.Figure)), "figure parameter not figure type"
+        assert isinstance(figure,(plotly.graph_objs._figure.Figure, 
+                                  matplotlib.figure.Figure)), "figure parameter not figure type"
 
         if isinstance(figure, plotly.graph_objs._figure.Figure):
 
