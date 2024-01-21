@@ -123,12 +123,13 @@ class eloRating(getData):
         return wk_result
     
     def uptadeEloRating_(self): #en günceli
-
+        
+        gData = getData()
         """- Takımların elo rating değerlerine göre 'Spi Rating' hesaplar.
            - Oynanan maçlara göre elo rating değerleri güncellenir ve ardından takımların en son güncel elo değerleri alınır.
            - Güncel elo rating değerlerine göre de spi rating hesaplanır.
         """
-        df = self.updateElo(df = self.getNewData(played = True)) #bu sezon sadece oynanan maçları alıyoruz.
+        df = self.updateElo(df = gData.getNewData(played = True)) #bu sezon sadece oynanan maçları alıyoruz.
         #df = self.updateElo(df = self.mergeData()) #history data alıyoruz
 
         data_home = df.rename(columns = {'Home':'Team', 'Elo_h_after':'EloRating'}).loc[:,["Date",'Team','EloRating']]
