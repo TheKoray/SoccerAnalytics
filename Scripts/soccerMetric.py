@@ -11,6 +11,7 @@ class soccerMetric(eloRating):
 
     def teamStrength(self,df):
 
+        gData = getData()
         data_home = df[['Home','HomeScore','AwayScore']]
         data_away = df[['Away','AwayScore','HomeScore']]
 
@@ -22,10 +23,9 @@ class soccerMetric(eloRating):
         data_avg['Attack'] = data_avg['GoalScore'].apply(lambda x: x / data_avg['GoalScore'].mean())
         data_avg['Defense'] = data_avg['GoalCancel'].apply(lambda x: x / data_avg['GoalCancel'].mean())
 
-        teams = self.getTeams
+        teams = gData.getTeams #get teams getData classından gelir.
 
         return data_avg.loc[teams,:]
-        #return data_avg
     
     def attackRank(self,df):
     
@@ -55,41 +55,8 @@ class soccerMetric(eloRating):
         df['Defense_Rank'] = d_rank
 
         return df
-
-    def poissonPredict(self, df: pd.DataFrame, home_team : str, away_team: str):
-
-        play_df = self.getNewData(played = True) #bu sezon sadece oynanan maçları alıyoruz.
-
-        if home_team in df.index and away_team in df.index:
-
-            lamb_home = df.loc[home_team, 'Attack'] * df.loc[away_team, 'Defense']
-            lamb_away = df.loc[away_team, 'Attack'] * df.loc[home_team, 'Defense']
-
-            prob_home, prob_away, prob_draw = 0,0,0
-
-            for home in range(0,10): #10 tane gol kez döner
-
-                for away in range(0,10):
-
-                    p = poisson.pmf(home, lamb_home) * poisson.pmf(away, lamb_away)
-
-                    if home == away:
-                        prob_draw += p
-
-                    elif home > away:
-                        prob_home += p
-                    else:
-                        prob_away += p
-
-            point_home = 3 * prob_home + prob_draw
-            point_away = 3 * prob_away + prob_draw
-
-            return round(prob_home*100,2),round(prob_draw *100,2),round(prob_away *100,2)
-            
-        else:
-            return (0,0)
         
-    def _uptadeRating(self,df):
+    def uptadeRating_(self,df):
 
         team_data = self.teamStrength(df = df)
         team_data = self.attackRank(df = team_data)

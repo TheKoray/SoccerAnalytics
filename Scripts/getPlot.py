@@ -10,8 +10,11 @@ from plottable.formatters import decimal_to_percent
 from plottable.plots import circled_image # image
 import matplotlib
 import matplotlib.patches as patches
+from getData import * 
+from soccerMetric import *
+from helper_  import saveFig, getInfo
 
-class getPlot:
+class getPlot(getData, soccerMetric):
 
     def imgAdd(self,result_df):
         """
@@ -283,8 +286,10 @@ class getPlot:
     
     def WeeklyChange(self):
 
+        elo = eloRating()
+
         play_df = self.getNewData(played = True) #bu sezon sadece oynanan maçları alıyoruz.
-        elo_df = self.updateElo(df = play_df) 
+        elo_df = elo.updateElo(df = play_df) 
         data_avg = self.teamTable(df = elo_df)
 
         fig = px.bar(data_avg, y = 'WeeklyChange', x = data_avg.index, 
@@ -309,6 +314,9 @@ class getPlot:
             title_font_color= "white", #title rengi
             legend_title_font_color="white" #label rengi (blue, red üzerinde ki color'ın rengi)
         )
+
+        saveFig(figure = fig, figName = "WeeklyChange")
+        getInfo(figName = "WeeklyChange")
     
     def TeamRating(self):
 
@@ -321,3 +329,6 @@ class getPlot:
         team_rating = self.teamRatingImg(df = team_rating)
         img = self.plotTeamsRating(df = team_rating)
         
+        saveFig(figure = img, figName = "TeamRating")
+        getInfo(figName = "TeamRating")
+
