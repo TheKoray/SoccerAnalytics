@@ -6,11 +6,7 @@ import kaleido
 import os
 from datetime import datetime
 
-TODO = "get table fonksiyonunda teamRatingImg fonksiyonu hata veriyor. getPlot classına ait fonskiyon olduğu için selfde hata veriyor."
-
-
-path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
-
+path = r"--yourPath--"
 
 def getCurrentDate():
 
