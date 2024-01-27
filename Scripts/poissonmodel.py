@@ -5,18 +5,33 @@ import statsmodels.formula.api as smf
 from scipy.stats import poisson,skellam
 import seaborn as sns 
 import matplotlib.pyplot as plt
-from helper import *
-
 gData = getData()
-h = helper()
+
 
 class poissonmodel():
 
-    def __init__(self, home_team, away_team):
+    home_team = str()
+    away_team = str()
+    max_goals = 5
 
-        self.home_team = home_team
-        self.away_team = away_team
-        self.max_goals = 7
+    @property
+    def homeTeams(self):
+        return self.home_team
+    @property
+    def awayTeams(self):
+        return self.away_team
+    
+    @homeTeams.setter
+    def homeTeams(self, newhome): #home teams setter 
+
+        self.home_team = newhome
+        return self.home_team
+    
+    @awayTeams.setter
+    def awayTeams(self, newAway): #away teams setter
+
+        self.away_team = newAway 
+        return self.away_team
 
     def poissonModel(self):
 
@@ -60,7 +75,7 @@ class poissonmodel():
         return homewin, draw, awaywin
 
     def goalsProbPlot(self):
-        
+
         score_df = self.simulateMatch()
         fig=plt.figure(figsize=(10,5))
         ax=fig.add_subplot(1,1,1)
