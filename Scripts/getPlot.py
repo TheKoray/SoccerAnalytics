@@ -12,7 +12,7 @@ import matplotlib
 import matplotlib.patches as patches
 from getData import * 
 from soccerMetric import *
-from helper_  import saveFig, getInfo
+from helpers  import saveFig, getInfo
 
 class getPlot(getData, soccerMetric):
 
@@ -332,3 +332,11 @@ class getPlot(getData, soccerMetric):
         saveFig(figure = img, figName = "TeamRating")
         getInfo(figName = "TeamRating")
 
+    def getTablePlot(self):
+
+        play_df = self.getNewData(played = True) #bu sezon sadece oynanan maçları alıyoruz.
+        elo_df = self.updateElo(df = play_df) 
+        data_avg = self.teamTable(df = elo_df)
+        elo_change_df = self.teamRatingImg(df = data_avg)
+
+        return elo_change_df
