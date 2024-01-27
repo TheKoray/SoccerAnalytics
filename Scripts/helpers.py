@@ -6,9 +6,13 @@ import kaleido
 import os
 from datetime import datetime
 
+<<<<<<< HEAD
 TODO = "get table fonksiyonunda teamRatingImg fonksiyonu hata veriyor. getPlot classına ait fonskiyon olduğu için selfde hata veriyor."
 
 path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
+=======
+path = r"--yourPath--"
+>>>>>>> ee92c72f7f06829f52cab3597d473d0d44333161
 
 def getCurrentDate():
 
@@ -50,3 +54,16 @@ def getInfo(figName):
     folderName = getPlotInfo(figName=figName)
 
     print(f"{path}\{folderName} klasörüne {folderName}_{figDate} adında kaydedildi")
+<<<<<<< HEAD
+=======
+
+"""
+def getTable(self):
+
+    play_df = self.getNewData(played = True) #bu sezon sadece oynanan maçları alıyoruz.
+    elo_df = self.updateElo(df = play_df) 
+    data_avg = self.teamTable(df = elo_df)
+    elo_change_df = self.teamRatingImg(df = data_avg)
+
+    return elo_change_df.drop('Img', axis=1)"""
+>>>>>>> ee92c72f7f06829f52cab3597d473d0d44333161
