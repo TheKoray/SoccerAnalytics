@@ -5,6 +5,8 @@ import statsmodels.formula.api as smf
 from scipy.stats import poisson,skellam
 import seaborn as sns 
 import matplotlib.pyplot as plt
+from collections import defaultdict
+
 gData = getData()
 
 
@@ -92,4 +94,26 @@ class poissonmodel():
         ax.yaxis.get_inverted()
         plt.title(f"{self.home_team} - {self.away_team} Outcome Probability")
         return fig 
+    
+    def poissonPredictPipeline(self, wk : int):
+
+        new_data = pd.read_csv("2023_2024_sezonu.csv").drop("Unnamed: 0", axis=1) # 2023-2024 sezon maçlarının olduğu csv 
+        teams = defaultdict(list)
+
+        for _, col in new_data.loc[new_data['Hafta'].isin([wk])].iterrows():
+
+            home, away = col['Home'] ,col['Away']
+            self.homeTeams = home
+            self.awayTeams = away
+
+            h, d, a = self.poissonPredict()
+
+            teams['Home'].append(home)
+            teams['Away'].append(away)
+
+            teams['HomeProb'].append(h)
+            teams['Draw'].append(d)
+            teams['AwayProb'].append(a)
+
+        return pd.DataFrame(teams).reindex(['Home','HomeProb','Draw','AwayProb','Away'], axis = 1)
 
