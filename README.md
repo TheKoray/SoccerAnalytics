@@ -6,4 +6,4 @@
 ![](team_rating.png)
 
 - **Goals Probability**
-- ![](GoalsProba.png)
+![](GoalsProba.png)
