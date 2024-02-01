@@ -13,8 +13,9 @@ import matplotlib.patches as patches
 from getData import * 
 from soccerMetric import *
 from helpers  import saveFig, getInfo
+from poissonmodel import *
 
-class getPlot(getData, soccerMetric):
+class getPlot(getData, soccerMetric, poissonmodel):
 
     def imgAdd(self,result_df):
         """
@@ -314,7 +315,6 @@ class getPlot(getData, soccerMetric):
             title_font_color= "white", #title rengi
             legend_title_font_color="white" #label rengi (blue, red üzerinde ki color'ın rengi)
         )
-
         saveFig(figure = fig, figName = "WeeklyChange")
         getInfo(figName = "WeeklyChange")
     
@@ -340,3 +340,14 @@ class getPlot(getData, soccerMetric):
         elo_change_df = self.teamRatingImg(df = data_avg)
 
         return elo_change_df
+    
+    def getPoissonScore(self, homeTeam, awayteam):
+
+        self.home_team = homeTeam 
+        self.away_team = awayteam 
+        
+        fig = self.goalsProbPlot()
+
+        saveFig(figure = fig, figName = 'GoalsProba')
+        getInfo(figName = 'GoalsProba')
+

@@ -6,7 +6,7 @@ import kaleido
 import os
 from datetime import datetime
 
-path = "your path"
+path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
 
 def getCurrentDate():
 
@@ -21,13 +21,14 @@ def getPlotInfo(figName): #grafiğe göre klasör ismi döndürür.
 
     folderCache = {'WeeklyChange' : 'weeklyChange',
                     'TeamRating': 'TeamRating',
-                    'pred' : 'Pred'
+                    'pred' : 'Pred',
+                    'GoalsProba' : 'GoalsProba'
                     }
     folderName = "".join([v for k,v in folderCache.items() if figName == k]) #path'deki ilgili figure göre klasör ismini aldık.
 
     return folderName
 
-def saveFig(figName, figure): #plotu kaydeder
+def saveFig(figName, figure): #save figure 
     
     folderName = getPlotInfo(figName=figName)
     figDate = getCurrentDate()
@@ -42,22 +43,9 @@ def saveFig(figName, figure): #plotu kaydeder
         os.chdir(fr"{path}\{folderName}")
         figure.savefig(f"{folderName}_{figDate}")
 
-def getInfo(figName):
+def getInfo(figName): #give me figure info for folder and path 
 
     figDate = getCurrentDate()
     folderName = getPlotInfo(figName=figName)
 
     print(f"{path}\{folderName} klasörüne {folderName}_{figDate} adında kaydedildi")
-<<<<<<< HEAD
-=======
-
-"""
-def getTable(self):
-
-    play_df = self.getNewData(played = True) #bu sezon sadece oynanan maçları alıyoruz.
-    elo_df = self.updateElo(df = play_df) 
-    data_avg = self.teamTable(df = elo_df)
-    elo_change_df = self.teamRatingImg(df = data_avg)
-
-    return elo_change_df.drop('Img', axis=1)"""
->>>>>>> ee92c72f7f06829f52cab3597d473d0d44333161
