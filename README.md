@@ -4,3 +4,6 @@
 ![](wk_chance_10.png)
 - **Team Rating**
 ![](team_rating.png)
+
+- **Goals Probability**
+- ![](GoalsProba.png)
