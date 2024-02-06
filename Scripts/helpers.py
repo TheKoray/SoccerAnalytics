@@ -6,7 +6,7 @@ import kaleido
 import os
 from datetime import datetime
 
-path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
+path = r"your-path"
 
 def getCurrentDate():
 
