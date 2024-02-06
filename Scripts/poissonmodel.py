@@ -111,9 +111,9 @@ class poissonmodel():
             teams['Home'].append(home)
             teams['Away'].append(away)
 
-            teams['HomeProb'].append(h)
-            teams['Draw'].append(d)
-            teams['AwayProb'].append(a)
+            teams['HomeProb'].append(round(h,2))
+            teams['Draw'].append(round(d,2))
+            teams['AwayProb'].append(round(a,2))
 
         return pd.DataFrame(teams).reindex(['Home','HomeProb','Draw','AwayProb','Away'], axis = 1)
 

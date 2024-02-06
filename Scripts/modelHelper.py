@@ -5,14 +5,15 @@ from getPlot import *
 from getData import *
 from eloRating import *
 from getPlot import *
-from helper import *
+from helpers import *
+from poissonmodel import * 
 import pickle 
 
 gData = getData()
 soccer = soccerMetric()
 elo = eloRating()
 plot = getPlot()
-helpfunc = helper()
+poisson = poissonmodel()
 
 class modelHelper():
 
@@ -80,9 +81,7 @@ class modelHelper():
         data_home = df.rename(columns = {'Home':'Team','HomeScore':'Score',"AwayScore":"ScoreCancel"})
         data_away = df.rename(columns = {'Away':'Team','AwayScore':'Score',"HomeScore":"ScoreCancel"})
 
-        result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team")\
-                    .sum().loc[:,['Score','ScoreCancel']]\
-                    .sort_values(by = "Score", ascending=False)
+        result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team").sum().loc[:,['Score','ScoreCancel']].sort_values(by = "Score", ascending=False)
         
         if home not in result.index:
             
@@ -113,8 +112,7 @@ class modelHelper():
         data_home = df.rename(columns = {'Home':'Team','HomePoint':'Point'})
         data_away = df.rename(columns = {'Away':'Team','AwayPoint':'Point'})
 
-        result = pd.concat([data_home, data_away], ignore_index=True)\
-                    .groupby("Team")["Point"].mean().to_frame("mbp")
+        result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team")["Point"].mean().to_frame("mbp")
 
         if home not in result.index:
 
@@ -176,9 +174,7 @@ class modelHelper():
         data_home = mbp_data.rename(columns = {'Home':'Team','HomePoint':'Point'})
         data_away = mbp_data.rename(columns = {'Away':'Team','AwayPoint':'Point'})
 
-        result = pd.concat([data_home, data_away], ignore_index=True)\
-                    .groupby("Team")["Point"].mean()\
-                    .to_frame("mbp").apply(lambda x: round(x,2))
+        result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team")["Point"].mean().to_frame("mbp").apply(lambda x: round(x,2))
 
         return result
 
@@ -187,9 +183,7 @@ class modelHelper():
         data_home = df.rename(columns = {'Home':'Team','HomeScore':'Score',"AwayScore":"ScoreCancel"})
         data_away = df.rename(columns = {'Away':'Team','AwayScore':'Score',"HomeScore":"ScoreCancel"})
 
-        result = pd.concat([data_home, data_away], ignore_index=True)\
-                    .groupby("Team").sum().loc[:,['Score','ScoreCancel']]\
-                    .sort_values(by = "Score", ascending=False)
+        result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team").sum().loc[:,['Score','ScoreCancel']].sort_values(by = "Score", ascending=False)
         return result
     
     def predResult(self, home, away, model,team_data, play_df):
@@ -311,8 +305,13 @@ class modelHelper():
                         .drop(['HomeScore','AwayScore'], axis=1)
                 
             elif user == 'Stats':
-                return helpfunc.getTable()
-
+                return plot.getTablePlot().drop('Img', axis = 1)
+                pass
+                
+            elif user == "Poisson":
+                week = input("Week = ")
+                return poisson.poissonPredictPipeline(wk = int(week))
+            
             elif user == "q":
                 break
 
