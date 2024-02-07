@@ -281,37 +281,28 @@ class modelHelper():
         if plotting:
             result_df = plot.imgAdd(result_df = result)
             plot.weeklyProbPlot(df = result_df)
-
         return result
-    
+
     def main(self, user):
 
-        while user != "q":
-            
-            if user == "Pred":
+        if user == "Pred":
+            predWeek = input("Predict For Week = ")
+            return self.predictPipeline(wk = int(predWeek))
 
-                predWeek = input("Predict For Week = ")
-                return self.predictPipeline(wk = int(predWeek))
-                
-            elif user == 'Rating':
-                return soccer.uptadeEloRating_().reset_index().set_axis(np.arange(1,21), axis=0)
-                
-            elif user == 'Weekly':
+        elif user == 'Rating':
+            return soccer.uptadeEloRating_().reset_index().set_axis(np.arange(1,21), axis=0)
 
-                week = input("Week = ")
-                new_data = pd.read_csv("2023_2024_sezonu.csv").drop("Unnamed: 0", axis=1)
+        elif user == "Weekly":
 
-                return new_data.loc[new_data["Hafta"].isin([int(week)])].set_index('Tarih')\
+            week = input("Week = ")
+            new_data = pd.read_csv("2023_2024_sezonu.csv").drop("Unnamed: 0", axis=1)
+
+            return new_data.loc[new_data["Hafta"].isin([int(week)])].set_index('Tarih')\
                         .drop(['HomeScore','AwayScore'], axis=1)
-                
-            elif user == 'Stats':
+    
+        elif user == 'Stats':
                 return plot.getTablePlot().drop('Img', axis = 1)
-                pass
-                
-            elif user == "Poisson":
-                week = input("Week = ")
-                return poisson.poissonPredictPipeline(wk = int(week))
-            
-            elif user == "q":
-                break
-
+        
+        elif user == "Poisson":
+            week = input("Week = ")
+            return poisson.poissonPredictPipeline(wk = int(week))
