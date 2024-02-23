@@ -6,7 +6,8 @@ import kaleido
 import os
 from datetime import datetime
 
-path = r"your-path"
+path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
+pathOutput = r'C:\\Users\\koray\\OneDrive\\Masaüstü\\SuperLig\\süperligAI\TableStatsData'
 
 def getCurrentDate():
 
@@ -49,3 +50,10 @@ def getInfo(figName): #give me figure info for folder and path
     folderName = getPlotInfo(figName=figName)
 
     print(f"{path}\{folderName} klasörüne {folderName}_{figDate} adında kaydedildi")
+
+def isFile(fileName):
+
+    for _,_,file in os.walk(pathOutput):
+
+        if fileName in file:return True
+        else: return False
