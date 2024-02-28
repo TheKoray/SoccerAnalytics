@@ -306,3 +306,7 @@ class modelHelper():
         elif user == "Poisson":
             week = input("Week = ")
             return poisson.poissonPredictPipeline(wk = int(week))
+        
+        elif user == 'Save':
+            return "Saving"
+        
