@@ -4,10 +4,10 @@ from soccerMetric import *
 from getPlot import *
 from getData import *
 from eloRating import *
-from getPlot import *
-from helpers import saveStats
+from helpers import save
 from poissonmodel import * 
 import pickle 
+import os 
 
 gData = getData()
 soccer = soccerMetric()
@@ -282,6 +282,24 @@ class modelHelper():
             result_df = plot.imgAdd(result_df = result)
             plot.weeklyProbPlot(df = result_df)
         return result
+    
+    def saveStats(self, wk):
+
+        poisson = poissonmodel()
+        user_cache = {'ai': self.predictPipeline,
+                    'poisson' : poisson.poissonPredictPipeline,
+                    'table' : self.main}
+        
+        for key,function in user_cache.items():
+            #save fonksiyonun da path değişeceği için her seferinde dictionary içeerisindeki fonksiyonları çalıştıran scriptlerin olduğu pathe gittik
+            os.chdir(r'C:\\Users\\koray\\OneDrive\\Masaüstü\\SuperLig\\süperligAI')
+
+            if key  != 'table':
+                df = function(wk = wk)
+            else:
+                df =  function(user = 'Stats')
+
+            save(df = df, statsName = key)
 
     def main(self, user):
 
@@ -308,5 +326,6 @@ class modelHelper():
             return poisson.poissonPredictPipeline(wk = int(week))
         
         elif user == 'Save':
-            return "Saving"
+            week = input("Week = ")
+            self.saveStats(wk = week)
         

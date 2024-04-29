@@ -5,7 +5,8 @@ import plotly.express as px
 import kaleido 
 import os
 from datetime import datetime
-from modelHelper import * 
+#from modelHelper import * 
+from poissonmodel import *
 
 path = r"C:\Users\koray\OneDrive\Masaüstü\SuperLig\Output"
 pathOutput = r'C:\\Users\\koray\\OneDrive\\Masaüstü\\SuperLig\\süperligAI\TableStatsData'
@@ -70,11 +71,13 @@ def save(df, statsName):
     os.chdir(path = pathOutput)
     df.to_csv(statsCache[statsName])
 
-    print(f" '{statsCache[statsName]}' dosyası '{path}' pathına kaydedildi")
-
+    #print(f" '{statsCache[statsName]}' dosyası '{pathOutput}' pathına kaydedildi")
+    return f" '{statsCache[statsName]}' dosyası '{pathOutput}' pathına kaydedildi"
+"""
 def saveStats(wk):
 
-    modelFunc = modelHelper()
+   # modelFunc = modelHelper()
+    poisson = poissonmodel()
     user_cache = {'ai': modelFunc.predictPipeline,
                   'poisson' : poisson.poissonPredictPipeline,
                   'table' : modelFunc.main}
@@ -88,4 +91,4 @@ def saveStats(wk):
         else:
            df =  function(user = 'Stats')
 
-        save(df = df, statsName = key)
+        save(df = df, statsName = key)"""
