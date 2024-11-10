@@ -79,6 +79,12 @@ class eloRating(getData):
             df.loc[idx,'EloHomeChange'] = elo_ln - elo_home 
             df.loc[idx,'EloAwayChange'] = elo_vn - elo_away
 
+        df['Elo_difference'] = [h-a for h,a in zip(df['Elo_h_before'],df['Elo_a_before'])]
+
+        return df
+
+    def updateTeamResult(self, df : pd.DataFrame):
+
         df['HomePoint'] = [3 if h>a else 0 if h<a else 1 for h,a in zip(df['HomeScore'], df['AwayScore'])]
         df['AwayPoint'] = [3 if a>h else 0 if a<h else 1 for h,a in zip(df['HomeScore'], df['AwayScore'])]
 
@@ -132,9 +138,9 @@ class eloRating(getData):
         df = self.updateElo(df = gData.getNewData(played = True)) #bu sezon sadece oynanan maçları alıyoruz.
         #df = self.updateElo(df = self.mergeData()) #history data alıyoruz
 
-        data_home = df.rename(columns = {'Home':'Team', 'Elo_h_after':'EloRating'}).loc[:,["Date",'Team','EloRating']]
-        data_away = df.rename(columns = {'Away':'Team', 'Elo_a_after':'EloRating'}).loc[:,["Date",'Team','EloRating']]
-        wk = pd.concat([data_home, data_away], ignore_index = True).sort_values(by ='Date').reset_index(drop=True)\
+        data_home = df.rename(columns = {'Home':'Team', 'Elo_h_after':'EloRating'}).loc[:,["Tarih",'Team','EloRating']]
+        data_away = df.rename(columns = {'Away':'Team', 'Elo_a_after':'EloRating'}).loc[:,["Tarih",'Team','EloRating']]
+        wk = pd.concat([data_home, data_away], ignore_index = True).sort_values(by ='Tarih').reset_index(drop=True)\
                                                                 .groupby("Team")['EloRating']\
                                                                 .last()\
                                                                 .to_frame()\
@@ -151,15 +157,15 @@ class eloRating(getData):
         data_away = df.rename(columns = {'Away':'Team', 'AwayScore':'AG','HomeScore':'YG','EloAwayChange':'Change','Elo_a_after':'Elo', 'AwayPoint':'Point','AwayForm':'Form'})
 
         if table:
-            data_avg= pd.concat([data_home, data_away], ignore_index = True).loc[:,['Date','Team','AG','YG','Point','Elo','Change','Form','Point','Form']]\
+            data_avg= pd.concat([data_home, data_away], ignore_index = True).loc[:,['Tarih','Team','AG','YG','Point','Elo','Change','Form','Point','Form']]\
                                                     .assign(AV=lambda x: np.subtract(x['AG'],x['YG']))\
                                                     .assign(OM= data_avg.groupby('Team').size())\
                                                     .assign(Form = data_avg.groupby('Team')['Form'].sum().apply(lambda x: x[::-1]))\
                                                     .sort_values(by = 'Point', ascending = False)\
                                                     .reindex(['OM','AG','YG','AV','Point','Change','Form'], axis=1)
         else:
-            data_avg = pd.concat([data_home, data_away], ignore_index = True).loc[:,['Date','Team','AG','YG','Point','Elo','Change','Form']]\
-                                                    .sort_values(by='Date', ascending=True).reset_index(drop=True)\
+            data_avg = pd.concat([data_home, data_away], ignore_index = True).loc[:,['Tarih','Team','AG','YG','Point','Elo','Change','Form']]\
+                                                    .sort_values(by='Tarih', ascending=True).reset_index(drop=True)\
                                                     .loc[:,['Team','Change','Form']].set_index('Team')\
                                                     .sort_values(by = 'Change', ascending=False)
                                                     
