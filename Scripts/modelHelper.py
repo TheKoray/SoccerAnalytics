@@ -49,7 +49,7 @@ class modelHelper():
         return attack_home,defense_home, attack_away, defense_away
 
     def teamForm(self, df, home, away):
-        
+        #win sayılları toplamı
         df = df.assign(HomePoint = [3 if h>a else 0 if h<a else 1 for h,a in zip(df['HomeScore'], df['AwayScore'])])\
             .assign(AwayPoint = [3 if a>h else 0 if a<h else 1 for h,a in zip(df['HomeScore'], df['AwayScore'])])\
             .assign(HomeWin = [1 if h > a else 0 for h,a in zip(df['HomeScore'], df['AwayScore'])])\
@@ -178,12 +178,20 @@ class modelHelper():
 
         return result
 
-    def ScoreDifference(self, df):
+    def ScoreDifference(self, df : pd.DataFrame):
 
-        data_home = df.rename(columns = {'Home':'Team','HomeScore':'Score',"AwayScore":"ScoreCancel"})
-        data_away = df.rename(columns = {'Away':'Team','AwayScore':'Score',"HomeScore":"ScoreCancel"})
+        """
+        Keyword arguments:
+        df -- played_match of new season
+        Return: pd.DataFrame
+        """
+        
+        data_home = df[['Home','HomeScore', 'AwayScore']].rename(columns = {'Home':'Team','HomeScore':'Score', 'AwayScore':'ScoreCancel'})
+        data_away = df[['Away','AwayScore', 'HomeScore']].rename(columns = {'Away':'Team','AwayScore':'Score', 'HomeScore':'ScoreCancel'})
 
-        result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team").sum().loc[:,['Score','ScoreCancel']].sort_values(by = "Score", ascending=False)
+        result = pd.concat([data_home, data_away], ignore_index=True).groupby('Team')[['Score','ScoreCancel']].sum()\
+            .sort_values(by = 'Score', ascending = False)
+        
         return result
     
     def predResult(self, home, away, model,team_data, play_df):
