@@ -75,13 +75,25 @@ class modelHelper():
             a_w = data_avg.loc[away, 'Win']
 
         return h_w, a_w
+    
+    def ScoreDifference(self, df : pd.DataFrame):
+
+        """
+        Keyword arguments:
+        df -- played_match of new season
+        Return: pd.DataFrame
+        """
+        data_home = df[['Home','HomeScore', 'AwayScore']].rename(columns = {'Home':'Team','HomeScore':'Score', 'AwayScore':'ScoreCancel'})
+        data_away = df[['Away','AwayScore', 'HomeScore']].rename(columns = {'Away':'Team','AwayScore':'Score', 'HomeScore':'ScoreCancel'})
+
+        result = pd.concat([data_home, data_away], ignore_index=True).groupby('Team')[['Score','ScoreCancel']].sum()\
+            .sort_values(by = 'Score', ascending = False)
+        
+        return result
 
     def goalDiff(self, df,home, away):
 
-        data_home = df.rename(columns = {'Home':'Team','HomeScore':'Score',"AwayScore":"ScoreCancel"})
-        data_away = df.rename(columns = {'Away':'Team','AwayScore':'Score',"HomeScore":"ScoreCancel"})
-
-        result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team").sum().loc[:,['Score','ScoreCancel']].sort_values(by = "Score", ascending=False)
+        result = self.ScoreDifference(df = df)
         
         if home not in result.index:
             
@@ -176,22 +188,6 @@ class modelHelper():
 
         result = pd.concat([data_home, data_away], ignore_index=True).groupby("Team")["Point"].mean().to_frame("mbp").apply(lambda x: round(x,2))
 
-        return result
-
-    def ScoreDifference(self, df : pd.DataFrame):
-
-        """
-        Keyword arguments:
-        df -- played_match of new season
-        Return: pd.DataFrame
-        """
-        
-        data_home = df[['Home','HomeScore', 'AwayScore']].rename(columns = {'Home':'Team','HomeScore':'Score', 'AwayScore':'ScoreCancel'})
-        data_away = df[['Away','AwayScore', 'HomeScore']].rename(columns = {'Away':'Team','AwayScore':'Score', 'HomeScore':'ScoreCancel'})
-
-        result = pd.concat([data_home, data_away], ignore_index=True).groupby('Team')[['Score','ScoreCancel']].sum()\
-            .sort_values(by = 'Score', ascending = False)
-        
         return result
     
     def predResult(self, home, away, model,team_data, play_df):
